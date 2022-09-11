@@ -7,7 +7,7 @@ import { ValidationException } from "src/exceptions/validation.exception";
 export class ValidationPipe implements PipeTransform<any> {
     async transform(value: any, metadata: ArgumentMetadata) {
         const object = plainToClass(metadata.metatype, value);
-        const errors = await validate(object);
+        const errors = await validate(object, { whitelist: true, forbidNonWhitelisted: true });
         if (errors.length) {
             const messages = errors.map(error => `${error.property} - ${Object.values(error.constraints).join(', ')}`)
             throw new ValidationException(messages);
